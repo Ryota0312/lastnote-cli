@@ -1,10 +1,11 @@
+#!/home/ryota/.local/share/virtualenvs/lastnote-cli-n7dj9uMI/bin/python
 import click
 import yaml
 import datetime
 import sys
+import os
 from lastnote_selenium import LastNote
-
-import time
+app_home = os.path.abspath(os.path.join( os.path.dirname(os.path.abspath(__file__)) , "." ))
 
 @click.group()
 def cmd():
@@ -12,15 +13,15 @@ def cmd():
 
 @cmd.command(help='Room reservation.')
 @click.option('--event', required=True, type=str)
-@click.option('--start', required=True, type=str)
-@click.option('--term', required=True, type=int)
+@click.option('--start', required=True, type=str, default=datetime.datetime.strftime(datetime.datetime.today(), "%Y%m%d%H%M"))
+@click.option('--term', required=True, type=int, default=2)
 @click.option('--room', required=True, type=int)
 def room_reserve(start, term, room, event):
-    f = open("settings.yaml", "r")
+    f = open(app_home + "/settings.yaml", "r")
     settings =   yaml.load(f, Loader=yaml.SafeLoader)
-    
     lastnote = LastNote(settings)
-    lastnote.login("nishi", "nishI")
+    
+    lastnote.login()
     lastnote.room_reserve(datetime.datetime.strptime(start, "%Y%m%d%H%M"), term, room, event)
     lastnote.quit()
 
