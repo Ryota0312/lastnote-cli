@@ -8,18 +8,19 @@ class LastNote:
     def __init__(self, settings):
         options = ChromeOptions()
         options.add_argument('--headless')
-        self.driver = Chrome(settings["CHROME_DRIVER_PATH"], options=options)
+        self.settings = settings
+        self.driver = Chrome(self.settings["CHROME_DRIVER_PATH"], options=options)
 
     def quit(self):
         self.driver.quit()
 
-    def login(self, name, passwd):
+    def login(self):
         self.driver.get('http://lastnote.swlab.cs.okayama-u.ac.jp/gate/login')
 
         login_name = self.driver.find_element_by_id("login_name")
-        login_name.send_keys(name)
+        login_name.send_keys(self.settings["LOGIN_NAME"])
         password = self.driver.find_element_by_id("password")
-        password.send_keys(passwd)
+        password.send_keys(self.settings["PASSWORD"])
 
         time.sleep(1)
 
